@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiskequiz – Norske Fiskearter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH / NAME SCREEN -->
+<div id="screen-splash" class="screen active">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="logo-mark">🐟</div>
+    <h1 class="logo-title">Fiskequiz</h1>
+    <p class="logo-sub">Kjenner du norske fiskearter?</p>
+    <div class="name-input-wrap">
+      <input type="text" id="player-name" placeholder="Skriv inn navnet ditt" maxlength="20" autocomplete="off" />
+    </div>
+    <button class="btn-primary" id="btn-start-game">Start Quiz</button>
+    <button class="btn-ghost" id="btn-show-gallery-splash">🗂 Galleri</button>
+    <button class="btn-ghost" id="btn-show-leaderboard-splash">🏆 Leaderboard</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="lives-display" id="lives-display">
+      <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+    </div>
+    <div class="score-display">
+      <span id="score-value">0</span>
+      <span class="score-label">poeng</span>
+    </div>
+    <div class="streak-display" id="streak-display" style="opacity:0">
+      🔥 <span id="streak-value">0</span>
+    </div>
+  </div>
+
+  <div class="timer-bar-wrap">
+    <div class="timer-bar" id="timer-bar"></div>
+  </div>
+
+  <div class="fish-image-wrap" id="fish-image-wrap">
+    <img id="fish-image" src="" alt="Hvilken fisk er dette?" />
+    <div class="image-shimmer" id="image-shimmer"></div>
+  </div>
+
+  <div class="options-grid" id="options-grid">
+    <!-- 4 option buttons injected by JS -->
+  </div>
+
+  <div class="question-counter" id="question-counter">Spørsmål 1</div>
+</div>
+
+<!-- ANSWER FEEDBACK SCREEN -->
+<div id="screen-feedback" class="screen">
+  <div class="feedback-content">
+    <div class="feedback-icon" id="feedback-icon"></div>
+    <h2 class="feedback-title" id="feedback-title"></h2>
+    <div class="fish-card-reveal" id="fish-card-reveal">
+      <img id="feedback-fish-img" src="" alt="" />
+      <div class="fish-card-info">
+        <div class="fish-name-no" id="feedback-name-no"></div>
+        <div class="fish-name-en" id="feedback-name-en"></div>
+        <div class="fish-name-la" id="feedback-name-la"></div>
+        <div class="fish-trait" id="feedback-trait"></div>
+        <div class="fish-info" id="feedback-info"></div>
+      </div>
+    </div>
+    <div class="new-discovery" id="new-discovery" style="display:none">
+      ✨ Ny oppdagelse lagt til galleriet!
+    </div>
+    <button class="btn-primary" id="btn-next">Neste fisk →</button>
+  </div>
+</div>
+
+<!-- GAME OVER SCREEN -->
+<div id="screen-gameover" class="screen">
+  <div class="gameover-content">
+    <div class="gameover-icon">🎣</div>
+    <h2>Spillet er over!</h2>
+    <div class="final-score-wrap">
+      <div class="final-score" id="final-score">0</div>
+      <div class="final-score-label">poeng</div>
+    </div>
+    <div class="final-stats" id="final-stats"></div>
+    <button class="btn-primary" id="btn-play-again">Spill igjen</button>
+    <button class="btn-ghost" id="btn-show-leaderboard-go">🏆 Se leaderboard</button>
+    <button class="btn-ghost" id="btn-show-gallery-go">🗂 Mitt galleri</button>
+  </div>
+</div>
+
+<!-- GALLERY SCREEN -->
+<div id="screen-gallery" class="screen">
+  <div class="screen-header">
+    <button class="btn-back" id="btn-back-gallery">←</button>
+    <h2>Fiskegalleriet</h2>
+    <div class="gallery-count" id="gallery-count">0 / 30</div>
+  </div>
+  <div class="gallery-grid" id="gallery-grid">
+    <!-- Fish cards injected by JS -->
+  </div>
+</div>
+
+<!-- GALLERY DETAIL MODAL -->
+<div id="modal-fish" class="modal">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close">✕</button>
+    <img id="modal-fish-img" src="" alt="" />
+    <div class="modal-info">
+      <div class="modal-name-no" id="modal-name-no"></div>
+      <div class="modal-name-en" id="modal-name-en"></div>
+      <div class="modal-name-la" id="modal-name-la"></div>
+      <div class="modal-trait" id="modal-trait"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD SCREEN -->
+<div id="screen-leaderboard" class="screen">
+  <div class="screen-header">
+    <button class="btn-back" id="btn-back-leaderboard">←</button>
+    <h2>Leaderboard</h2>
+  </div>
+  <div class="leaderboard-tabs">
+    <button class="tab active" id="tab-global" onclick="showTab('global')">Globalt</button>
+    <button class="tab" id="tab-personal" onclick="showTab('personal')">Mine scores</button>
+  </div>
+  <div id="leaderboard-list" class="leaderboard-list"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="fish-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
