@@ -131,7 +131,8 @@ function loadQuestion() {
   currentFish = shuffled[0];
 
   // Pick a random image from the fish's folder (1–5)
-  const imgNum = Math.floor(Math.random() * 5) + 1;
+  const maxImg = currentFish.id === 'oyepal' ? 4 : 5;
+  const imgNum = Math.floor(Math.random() * maxImg) + 1;
   currentImageFile = `images/${encodeURIComponent(currentFish.folder)}_${imgNum}.jpg`;
 
   // Show loading shimmer
