@@ -4,7 +4,7 @@
 const SUPABASE_URL = 'https://kxodetdowvwqrhjpunlf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4b2RldGRvd3Z3cXJoanB1bmxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTc3MzAsImV4cCI6MjA4ODgzMzczMH0.7Hl5UfSv3dqFQ0oPhd1PBTXJ5jH-eNYe6SevMQ-beLU';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================================
 // GAME STATE
@@ -332,7 +332,7 @@ async function endGame() {
 
   // Save to Supabase
   try {
-    await supabase.from('leaderboard').insert({
+    await supabaseClient.from('leaderboard').insert({
       player_name: playerName,
       score: score,
       correct: totalCorrect,
