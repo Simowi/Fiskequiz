@@ -132,7 +132,7 @@ function loadQuestion() {
 
   // Pick a random image from the fish's folder (1–5)
   const imgNum = Math.floor(Math.random() * 5) + 1;
-  currentImageFile = `images/${currentFish.folder}_${imgNum}.jpg`;
+  currentImageFile = `images/${encodeURIComponent(currentFish.folder)}_${imgNum}.jpg`;
 
   // Show loading shimmer
   const shimmer = document.getElementById('image-shimmer');
@@ -146,7 +146,7 @@ function loadQuestion() {
   };
   img.onerror = () => {
     // Try image 1 as fallback
-    img.src = `images/${currentFish.folder}_1.jpg`;
+    img.src = `images/${encodeURIComponent(currentFish.folder)}_1.jpg`;
   };
   img.src = currentImageFile;
 
@@ -432,7 +432,7 @@ function renderGallery() {
            onclick="${discovered ? `openFishModal('${fish.id}')` : ''}">
         <div class="gallery-card-inner">
           ${discovered
-            ? `<img src="images/${fish.folder}_1.jpg" alt="${fish.nameNo}" loading="lazy" />`
+            ? `<img src="images/${encodeURIComponent(fish.folder)}_1.jpg" alt="${fish.nameNo}" loading="lazy" />`
             : `<div class="undiscovered-icon">?</div>`
           }
           <div class="gallery-card-name">${discovered ? fish.nameNo : '???'}</div>
@@ -446,7 +446,7 @@ function openFishModal(fishId) {
   const fish = FISH_BY_ID[fishId];
   if (!fish) return;
 
-  document.getElementById('modal-fish-img').src = `images/${fish.folder}_1.jpg`;
+  document.getElementById('modal-fish-img').src = `images/${encodeURIComponent(fish.folder)}_1.jpg`;
   document.getElementById('modal-name-no').textContent = fish.nameNo;
   document.getElementById('modal-name-en').textContent = fish.nameEn;
   document.getElementById('modal-name-la').textContent = fish.nameLa;
