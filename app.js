@@ -16,6 +16,9 @@ let streak = 0;
 let questionCount = 0;
 let currentFish = null;
 let currentImageFile = null;
+let currentImageNum = null;
+let shownImages = {};           // { fishId: Set of image numbers shown this session }
+let discoveredImages = {};      // { fishId: imageNum } 2013 which image to show in gallery
 let timerInterval = null;
 let timeLeft = 20;
 let gameStartTime = null;
@@ -113,6 +116,8 @@ function startGame() {
   questionCount = 0;
   totalCorrect = 0;
   discoveredFish = new Set();
+  shownImages = {};
+  discoveredImages = {};
   gameStartTime = Date.now();
 
   updateHUD();
@@ -130,9 +135,22 @@ function loadQuestion() {
   const shuffled = [...FISH_DATA].sort(() => Math.random() - 0.5);
   currentFish = shuffled[0];
 
-  // Pick a random image from the fish's folder (1–5)
+  // Pick a random image not yet shown this session for this fish
   const maxImg = currentFish.maxImg || 5;
-  const imgNum = Math.floor(Math.random() * maxImg) + 1;
+  if (!shownImages[currentFish.id]) shownImages[currentFish.id] = new Set();
+  const shown = shownImages[currentFish.id];
+  const available = [];
+  for (let i = 1; i <= maxImg; i++) {
+    if (!shown.has(i)) available.push(i);
+  }
+  // If all images shown, reset so we can continue
+  if (available.length === 0) {
+    shownImages[currentFish.id] = new Set();
+    for (let i = 1; i <= maxImg; i++) available.push(i);
+  }
+  const imgNum = available[Math.floor(Math.random() * available.length)];
+  shown.add(imgNum);
+  currentImageNum = imgNum;
   currentImageFile = `images/${currentFish.folder}_${imgNum}.jpg`;
 
   // Show loading shimmer
@@ -225,6 +243,8 @@ function selectAnswer(fishId, btn) {
     streak++;
     totalCorrect++;
 
+    // Always update the gallery image to the one shown in quiz
+    discoveredImages[currentFish.id] = currentImageNum;
     if (!allDiscovered.has(currentFish.id)) {
       allDiscovered.add(currentFish.id);
       discoveredFish.add(currentFish.id);
@@ -399,7 +419,7 @@ function renderGallery() {
            onclick="${discovered ? `openFishModal('${fish.id}')` : ''}">
         <div class="gallery-card-inner">
           ${discovered
-            ? `<img src="images/${fish.folder}_1.jpg" alt="${fish.nameNo}" loading="lazy" />`
+            ? `<img src="images/${fish.folder}_${discoveredImages[fish.id] || 1}.jpg" alt="${fish.nameNo}" loading="lazy" />`
             : `<div class="undiscovered-icon">?</div>`
           }
           <div class="gallery-card-name">${discovered ? fish.nameNo : '???'}</div>
@@ -413,7 +433,7 @@ function openFishModal(fishId) {
   const fish = FISH_BY_ID[fishId];
   if (!fish) return;
 
-  document.getElementById('modal-fish-img').src = `images/${fish.folder}_1.jpg`;
+  document.getElementById('modal-fish-img').src = `images/${fish.folder}_${discoveredImages[fish.id] || 1}.jpg`;
   document.getElementById('modal-name-no').textContent = fish.nameNo;
   document.getElementById('modal-name-en').textContent = fish.nameEn;
   document.getElementById('modal-name-la').textContent = fish.nameLa;
