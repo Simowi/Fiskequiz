@@ -395,17 +395,7 @@ function showFeedback(correct, fishId, isTimeout = false) {
       rtEl.style.display = 'none';
     }
   }
-  const rtEl = document.getElementById('feedback-rarity');
-  if (rtEl) {
-    if (correct) {
-      const rt = getRarityTier(fish);
-      rtEl.textContent = rt.label;
-      rtEl.className = 'rarity-badge rarity-tier-' + rt.tier;
-      rtEl.style.display = 'inline-block';
-    } else {
-      rtEl.style.display = 'none';
-    }
-  }
+
   document.getElementById('feedback-type').textContent = fish.type || '';
   document.getElementById('feedback-name-en').textContent = fish.nameEn;
   document.getElementById('feedback-name-la').textContent = fish.nameLa;
