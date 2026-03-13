@@ -550,7 +550,8 @@ function renderGallery() {
             ? `<img src="images/${fish.folder}_${discoveredImages[fish.id] || 1}.jpg" alt="${fish.nameNo}" loading="lazy" />`
             : `<div class="undiscovered-icon">?</div>`
           }
-          <div class="gallery-card-name">${discovered ? fish.nameNo : '???'}${discovered ? '<span class="rarity-badge rarity-tier-' + rt.tier + '">' + rt.label + '</span>' : ''}</div>
+          ${discovered ? '<div class="gallery-card-rarity rarity-tier-' + rt.tier + '-text">' + rt.label + '</div>' : ''}
+          <div class="gallery-card-name">${discovered ? fish.nameNo : '???'}</div>
         </div>
       </div>
     `;

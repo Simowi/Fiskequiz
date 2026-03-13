@@ -1013,3 +1013,33 @@ html, body {
 .gallery-card.rarity-card-3 { border-top: 3px solid #007aff; }
 .gallery-card.rarity-card-4 { border-top: 3px solid #af52de; }
 .gallery-card.rarity-card-5 { border-top: 3px solid #ff9500; }
+
+/* ── Gallery card alternativ B ─────────────────────────── */
+.gallery-card-info {
+  padding: 0;
+}
+.gallery-card-rarity {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 5px 10px 2px;
+}
+.gallery-card-name {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 2px 10px 8px;
+  color: var(--color-text-primary, #1c1c1e);
+}
+.rarity-tier-1-text { background: #8e8e9318; color: #636366; border-top: none; }
+.rarity-tier-2-text { background: #34c75918; color: #248a3d; border-top: none; }
+.rarity-tier-3-text { background: #007aff18; color: #0062cc; border-top: none; }
+.rarity-tier-4-text { background: #af52de18; color: #8944ab; border-top: none; }
+.rarity-tier-5-text { background: #ff950018; color: #c97000; border-top: none; }
+
+/* Remove old border-top rarity styles */
+.gallery-card.rarity-card-1,
+.gallery-card.rarity-card-2,
+.gallery-card.rarity-card-3,
+.gallery-card.rarity-card-4,
+.gallery-card.rarity-card-5 { border-top: none; }
