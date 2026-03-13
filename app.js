@@ -99,6 +99,7 @@ function setupEventListeners() {
 
   document.getElementById('btn-show-gallery-splash').addEventListener('click', () => {
     if (!localStorage.getItem('fiskequiz_hasplayed')) return;
+    localStorage.removeItem('fiskequiz_newfish');
     renderGallery();
     showScreen('screen-gallery');
   });
@@ -320,6 +321,7 @@ function selectAnswer(fishId, btn) {
       allDiscovered.add(currentFish.id);
       discoveredFish.add(currentFish.id);
       saveDiscovered();
+      localStorage.setItem('fiskequiz_newfish', '1');
     }
     currentFish._isNewDiscovery = isFirstDiscovery;
   } else {
@@ -407,6 +409,7 @@ function showFeedback(correct, fishId, isTimeout = false) {
   newDisc.style.display = isNewDisc ? 'block' : 'none';
   if (isNewDisc) setTimeout(triggerSparkle, 300);
 
+  document.getElementById('btn-next').textContent = correct ? 'Neste fisk →' : 'Se poengsum →';
   showScreen('screen-feedback');
 }
 
@@ -438,6 +441,8 @@ async function endGame() {
 
   localStorage.setItem('fiskequiz_hasplayed', '1');
   updateGalleryButton();
+  const newFishDot = document.getElementById('gameover-newfish-dot');
+  if (newFishDot) newFishDot.style.display = localStorage.getItem('fiskequiz_newfish') === '1' ? 'inline-block' : 'none';
   showScreen('screen-gameover');
 
   // Save to Supabase
