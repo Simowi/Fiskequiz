@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDiscovered();
   setupEventListeners();
   renderGallery();
+  updateGalleryButton();
 });
 
 function loadDiscovered() {
@@ -47,6 +48,22 @@ function loadDiscovered() {
 
 function saveDiscovered() {
   localStorage.setItem('fiskequiz_discovered', JSON.stringify([...allDiscovered]));
+}
+
+function updateGalleryButton() {
+  const hasPlayed = localStorage.getItem('fiskequiz_hasplayed');
+  const btn = document.getElementById('btn-show-gallery-splash');
+  if (!btn) return;
+  if (hasPlayed) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+    btn.style.cursor = 'not-allowed';
+    btn.title = 'Spill minst én runde for å låse opp fangstboken';
+  }
 }
 
 // ============================================================
@@ -72,17 +89,7 @@ function setupEventListeners() {
   });
 
   document.getElementById('btn-show-gallery-splash').addEventListener('click', () => {
-    const hasPlayed = localStorage.getItem('fiskequiz_hasplayed');
-    if (!hasPlayed) {
-      const nameInput = document.getElementById('player-name').value.trim();
-      if (!nameInput) {
-        alert('Skriv inn navnet ditt og spill minst én runde for å låse opp galleriet!');
-        document.getElementById('player-name').focus();
-        return;
-      }
-      alert('Spill minst én runde for å låse opp galleriet!');
-      return;
-    }
+    if (!localStorage.getItem('fiskequiz_hasplayed')) return;
     renderGallery();
     showScreen('screen-gallery');
   });
@@ -292,11 +299,7 @@ function loseLife() {
 function updateHUD() {
   document.getElementById('score-value').textContent = score.toLocaleString('no');
 
-  const hearts = ['❤️', '❤️', '❤️'];
-  const livesHTML = hearts.map((h, i) => {
-    return `<span class="heart ${i >= lives ? 'lost' : ''}">${i < lives ? '❤️' : '🖤'}</span>`;
-  }).join('');
-  document.getElementById('lives-display').innerHTML = livesHTML;
+  // No lives display (single life mode)
 
   const streakEl = document.getElementById('streak-display');
   streakEl.style.opacity = '0';
@@ -356,6 +359,7 @@ async function endGame() {
   `;
 
   localStorage.setItem('fiskequiz_hasplayed', '1');
+  updateGalleryButton();
   showScreen('screen-gameover');
 
   // Save to Supabase
@@ -450,7 +454,7 @@ function triggerSparkle() {
 function renderGallery() {
   const grid = document.getElementById('gallery-grid');
   const count = document.getElementById('gallery-count');
-  count.textContent = `${allDiscovered.size} / 30`;
+  count.textContent = `${allDiscovered.size} / 31`;
 
   grid.innerHTML = FISH_DATA.map(fish => {
     const discovered = allDiscovered.has(fish.id);
