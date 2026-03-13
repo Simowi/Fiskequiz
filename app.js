@@ -506,7 +506,7 @@ function renderGallery() {
   const count = document.getElementById('gallery-count');
   count.textContent = `${allDiscovered.size} / 31`;
 
-  grid.innerHTML = FISH_DATA.map(fish => {
+  grid.innerHTML = [...FISH_DATA].sort((a,b) => (a.rarity||99)-(b.rarity||99)).map(fish => {
     const discovered = allDiscovered.has(fish.id);
     return `
       <div class="gallery-card ${discovered ? 'discovered' : 'undiscovered'}" 
