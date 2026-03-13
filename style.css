@@ -988,3 +988,28 @@ html, body {
   .options-grid { padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
   .splash-content { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 }
+
+/* ── Rarity badges ─────────────────────────────────────── */
+.rarity-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 6px;
+  color: #fff;
+}
+.rarity-tier-1 { background: #8e8e93; }
+.rarity-tier-2 { background: #34c759; }
+.rarity-tier-3 { background: #007aff; }
+.rarity-tier-4 { background: #af52de; }
+.rarity-tier-5 { background: #ff9500; }
+
+.gallery-card.rarity-card-1 { border-top: 3px solid #8e8e93; }
+.gallery-card.rarity-card-2 { border-top: 3px solid #34c759; }
+.gallery-card.rarity-card-3 { border-top: 3px solid #007aff; }
+.gallery-card.rarity-card-4 { border-top: 3px solid #af52de; }
+.gallery-card.rarity-card-5 { border-top: 3px solid #ff9500; }

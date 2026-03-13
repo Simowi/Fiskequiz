@@ -1,3 +1,12 @@
+
+function getRarityTier(fish) {
+  const r = fish.rarity || 1;
+  if (r <= 6)  return { tier: 1, label: 'Vanlig' };
+  if (r <= 12) return { tier: 2, label: 'Uvanlig' };
+  if (r <= 19) return { tier: 3, label: 'Sjelden' };
+  if (r <= 25) return { tier: 4, label: 'Meget sjelden' };
+  return        { tier: 5, label: 'Ekstremt sjelden' };
+}
 // ============================================================
 // CONFIG
 // ============================================================
@@ -188,7 +197,14 @@ function loadQuestion() {
   if (lives <= 0) { endGame(); return; }
 
   // Pick a random fish
-  const shuffled = [...FISH_DATA].sort(() => Math.random() - 0.5);
+  const weighted = [];
+  FISH_DATA.forEach(f => {
+    const w = [8,5,3,2,1][getRarityTier(f).tier - 1];
+    for (let i = 0; i < w; i++) weighted.push(f);
+  });
+  const shuffled = weighted
+    .sort(() => Math.random() - 0.5)
+    .filter((f, i, a) => a.findIndex(x => x.id === f.id) === i);
   currentFish = shuffled[0];
 
   // Pick a random image not yet shown this session for this fish
@@ -368,6 +384,17 @@ function showFeedback(correct, fishId, isTimeout = false) {
   // Fish card
   document.getElementById('feedback-fish-img').src = currentImageFile;
   document.getElementById('feedback-name-no').textContent = fish.nameNo;
+  const rtEl = document.getElementById('feedback-rarity');
+  if (rtEl) {
+    if (correct) {
+      const rt = getRarityTier(fish);
+      rtEl.textContent = rt.label;
+      rtEl.className = 'rarity-badge rarity-tier-' + rt.tier;
+      rtEl.style.display = 'inline-block';
+    } else {
+      rtEl.style.display = 'none';
+    }
+  }
   document.getElementById('feedback-type').textContent = fish.type || '';
   document.getElementById('feedback-name-en').textContent = fish.nameEn;
   document.getElementById('feedback-name-la').textContent = fish.nameLa;
@@ -507,6 +534,7 @@ function renderGallery() {
   count.textContent = `${allDiscovered.size} / 31`;
 
   grid.innerHTML = [...FISH_DATA].sort((a,b) => (a.rarity||99)-(b.rarity||99)).map(fish => {
+    const rt = getRarityTier(fish);
     const discovered = allDiscovered.has(fish.id);
     return `
       <div class="gallery-card ${discovered ? 'discovered' : 'undiscovered'}" 
