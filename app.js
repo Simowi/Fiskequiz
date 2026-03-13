@@ -400,6 +400,7 @@ function showFeedback(correct, fishId, isTimeout = false) {
   document.getElementById('feedback-fish-img').src = currentImageFile;
   document.getElementById('feedback-name-no').textContent = fish.nameNo;
   const rtEl = document.getElementById('feedback-rarity');
+  const typeEl = document.getElementById('feedback-type');
   if (rtEl) {
     if (correct) {
       const rt = getRarityTier(fish);
@@ -410,6 +411,7 @@ function showFeedback(correct, fishId, isTimeout = false) {
       rtEl.style.display = 'none';
     }
   }
+  if (typeEl) typeEl.style.display = fish.type ? 'inline-block' : 'none';
 
   document.getElementById('feedback-type').textContent = fish.type || '';
   document.getElementById('feedback-name-en').textContent = fish.nameEn;
