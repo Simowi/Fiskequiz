@@ -1,4 +1,16 @@
 
+function getWeekKey() {
+  const now = new Date();
+  const jan1 = new Date(now.getFullYear(), 0, 1);
+  const week = Math.ceil(((now - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return now.getFullYear() + '-W' + String(week).padStart(2, '0');
+}
+
+function updateProgressText() {
+  const el = document.getElementById('splash-progress');
+  if (el) el.textContent = allDiscovered.size + ' / 31 fisker oppdaget';
+}
+
 function getRarityTier(fish) {
   const r = fish.rarity || 1;
   if (r <= 6)  return { tier: 1, label: 'Vanlig' };
@@ -43,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   renderGallery();
   updateGalleryButton();
+  updateProgressText();
 });
 
 function loadDiscovered() {
@@ -410,6 +423,15 @@ function showFeedback(correct, fishId, isTimeout = false) {
   if (isNewDisc) setTimeout(triggerSparkle, 300);
 
   document.getElementById('btn-next').textContent = correct ? 'Neste fisk →' : 'Se poengsum →';
+  const confEl = document.getElementById('feedback-confusion');
+  if (confEl) {
+    if (!correct && fish.confusesWith && fish.confusionTip) {
+      confEl.innerHTML = '⚠️ Mange forveksler denne med <strong>' + fish.confusesWith + '</strong>: ' + fish.confusionTip;
+      confEl.style.display = 'block';
+    } else {
+      confEl.style.display = 'none';
+    }
+  }
   showScreen('screen-feedback');
 }
 
@@ -441,6 +463,7 @@ async function endGame() {
 
   localStorage.setItem('fiskequiz_hasplayed', '1');
   updateGalleryButton();
+  updateProgressText();
   const newFishDot = document.getElementById('gameover-newfish-dot');
   if (newFishDot) newFishDot.style.display = localStorage.getItem('fiskequiz_newfish') === '1' ? 'inline-block' : 'none';
   showScreen('screen-gameover');
@@ -462,7 +485,7 @@ async function endGame() {
 // ============================================================
 // LEADERBOARD
 // ============================================================
-async function loadLeaderboard() {
+async function loadLeaderboard(tab = 'weekly') {
   const list = document.getElementById('leaderboard-list');
   list.innerHTML = '<div class="loading-msg">Laster...</div>';
   await loadGlobalLeaderboard();
@@ -582,4 +605,17 @@ function closeModal() {
 // ============================================================
 function escapeHtml(str) {
   return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── Leaderboard tab switching ───────────────────────────
+let currentLeaderboardTab = 'weekly';
+function switchLeaderboardTab(tab) {
+  currentLeaderboardTab = tab;
+  document.getElementById('tab-weekly').className = 'tab-btn' + (tab === 'weekly' ? ' tab-active' : '');
+  document.getElementById('tab-alltime').className = 'tab-btn' + (tab === 'alltime' ? ' tab-active' : '');
+  const list = document.getElementById('leaderboard-list');
+  if (list) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:#888">Laster...</div>';
+  }
+  loadLeaderboard(tab);
 }

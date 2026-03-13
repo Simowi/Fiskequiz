@@ -1046,3 +1046,47 @@ html, body {
 .gallery-card.rarity-card-3,
 .gallery-card.rarity-card-4,
 .gallery-card.rarity-card-5 { border-top: none; }
+
+/* ── Splash progress ───────────────────────────────────── */
+.splash-progress {
+  font-size: 14px;
+  color: var(--text2, #636366);
+  margin: 4px 0 0;
+  font-weight: 500;
+}
+
+/* ── Confusion tip ─────────────────────────────────────── */
+.feedback-confusion {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #7a5800;
+  margin: 8px 0;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* ── Leaderboard tabs ──────────────────────────────────── */
+.leaderboard-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e0e0e0);
+  background: var(--surface, #fff);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text2, #636366);
+}
+.tab-btn.tab-active {
+  background: var(--accent, #007aff);
+  color: #fff;
+  border-color: var(--accent, #007aff);
+}
