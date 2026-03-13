@@ -20,7 +20,7 @@ let currentImageNum = null;
 let shownImages = {};           // { fishId: Set of image numbers shown this session }
 let discoveredImages = {};      // { fishId: imageNum } 2013 which image to show in gallery
 let timerInterval = null;
-let timeLeft = 20;
+let timeLeft = 15;
 let gameStartTime = null;
 let totalCorrect = 0;
 let discoveredFish = new Set(); // fish ids discovered this session
@@ -250,7 +250,7 @@ function loadQuestion() {
 // TIMER
 // ============================================================
 function startTimer() {
-  timeLeft = 20;
+  timeLeft = 15;
   clearInterval(timerInterval);
   updateTimerBar(20, 20);
 
@@ -299,11 +299,13 @@ function selectAnswer(fishId, btn) {
 
     // Always update the gallery image to the one shown in quiz
     discoveredImages[currentFish.id] = currentImageNum;
-    if (!allDiscovered.has(currentFish.id)) {
+    const isFirstDiscovery = !allDiscovered.has(currentFish.id);
+    if (isFirstDiscovery) {
       allDiscovered.add(currentFish.id);
       discoveredFish.add(currentFish.id);
       saveDiscovered();
     }
+    currentFish._isNewDiscovery = isFirstDiscovery;
   } else {
     btn.classList.add('wrong');
     // Show correct answer
@@ -357,13 +359,14 @@ function showFeedback(correct, fishId) {
   // Fish card
   document.getElementById('feedback-fish-img').src = currentImageFile;
   document.getElementById('feedback-name-no').textContent = fish.nameNo;
+  document.getElementById('feedback-type').textContent = fish.type || '';
   document.getElementById('feedback-name-en').textContent = fish.nameEn;
   document.getElementById('feedback-name-la').textContent = fish.nameLa;
   document.getElementById('feedback-trait').textContent = fish.trait;
   document.getElementById('feedback-info').textContent = fish.info;
 
   const newDisc = document.getElementById('new-discovery');
-  const isNewDisc = discoveredFish.has(fish.id) && correct;
+  const isNewDisc = correct && fish._isNewDiscovery;
   newDisc.style.display = isNewDisc ? 'block' : 'none';
   if (isNewDisc) setTimeout(triggerSparkle, 300);
 
